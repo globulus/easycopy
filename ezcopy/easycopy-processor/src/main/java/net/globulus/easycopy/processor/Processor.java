@@ -89,7 +89,8 @@ public class Processor extends AbstractProcessor {
 
 					Set<Modifier> modifiers = member.getModifiers();
 					if (modifiers.contains(Modifier.STATIC)
-							|| modifiers.contains(Modifier.FINAL)) {
+							|| modifiers.contains(Modifier.FINAL)
+							|| modifiers.contains(Modifier.PRIVATE)) {
 						continue;
 					}
 
