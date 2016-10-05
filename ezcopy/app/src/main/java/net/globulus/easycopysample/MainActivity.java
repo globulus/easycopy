@@ -22,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
 		goal.fat = 11f;
 		goal.name = "aaa";
 		goal.parameter1 = 22;
+		goal.trolol = new Trolo();
+		goal.trolol.ab = 1;
+		goal.trolol.bc = 2;
 
 		Goal goal2 = new Goal();
 		CopyUtil.copy(goal, goal2);

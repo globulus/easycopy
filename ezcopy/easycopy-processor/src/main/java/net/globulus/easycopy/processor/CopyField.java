@@ -23,7 +23,7 @@ public class CopyField {
 		type = tm.toString();
 		isPrimitive = tm.getKind().isPrimitive();
 		if (!isPrimitive) {
-			Class<?> classesToCheck[] = { Byte.class, Short.class, Integer.class, Float.class, Double.class, Boolean.class };
+			Class<?> classesToCheck[] = { Byte.class, Short.class, Integer.class, Float.class, Double.class, Boolean.class, String.class };
 			for (Class<?> clazz : classesToCheck) {
 				if (isAssignable(tm, clazz, elementUtils, typeUtils)) {
 					isPrimitive = true;

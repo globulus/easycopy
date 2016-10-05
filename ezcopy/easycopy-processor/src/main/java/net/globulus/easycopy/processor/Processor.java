@@ -72,7 +72,7 @@ public class Processor extends AbstractProcessor {
 			lastElement = element;
 
 			EasyCopy annotation = element.getAnnotation(EasyCopy.class);
-			boolean shallow = annotation.shallow();
+			boolean deep = annotation.deep();
 
 			List<? extends Element> memberFields = mElementUtils.getAllMembers((TypeElement) element);
 
@@ -99,7 +99,7 @@ public class Processor extends AbstractProcessor {
 
 			try {
 				TypeElement classElement = (TypeElement) element;
-				String name = copierCodeGen.generate(classElement, fields, shallow);
+				String name = copierCodeGen.generate(classElement, fields, deep);
 				annotatedClasses.add(classElement.getQualifiedName().toString());
 				parcelerNames.add(name);
 			} catch (Exception e) {

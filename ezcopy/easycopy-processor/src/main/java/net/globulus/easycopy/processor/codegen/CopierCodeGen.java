@@ -31,7 +31,7 @@ public class CopierCodeGen {
         this.elementUtils = elementUtils;
     }
 
-    public String generate(TypeElement classElement, List<CopyField> fields, boolean shallow) throws Exception {
+    public String generate(TypeElement classElement, List<CopyField> fields, boolean deep) throws Exception {
 
         String classSuffix = FrameworkUtil.getCopierClassExtension();
         String packageName = TypeUtils.getPackageName(elementUtils, classElement);
@@ -65,12 +65,12 @@ public class CopierCodeGen {
 
 		jw.beginMethod("void", "copy", EnumSet.of(Modifier.PUBLIC), originalClassName, PARAM_FROM, originalClassName, PARAM_TO);
 		for (CopyField field : fields) {
-			if (shallow || field.isPrimitive) {
+			if (!deep || field.isPrimitive) {
 				emitAssignmentStatement(jw, field);
 			} else {
 				String type = field.getType();
 				String name = field.getFieldName();
-				String auxName = PARAM_TO + name;
+				String auxName = PARAM_TO + "_" + name;
 				jw.emitStatement("%s %s = new %s()", type, auxName, type);
 				jw.beginControlFlow("if (%s.copy(%s.%s, %s))", FrameworkUtil.getCopyUtilClassName(),
 						PARAM_FROM, name, auxName);

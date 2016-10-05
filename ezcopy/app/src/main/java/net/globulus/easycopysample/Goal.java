@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by gordanglavas on 30/09/16.
  */
-@EasyCopy(shallow = true)
+@EasyCopy(deep = true)
 public class Goal {
 
 	public int goalType;
