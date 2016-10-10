@@ -37,10 +37,9 @@ public class CopierCodeGen {
         String packageName = TypeUtils.getPackageName(elementUtils, classElement);
         String binaryName = TypeUtils.getBinaryName(elementUtils, classElement);
 
-     	 String originalClassName = classElement.getSimpleName().toString();
+		String originalClassName = classElement.getSimpleName().toString();
 
         String originFullQualifiedName = classElement.getQualifiedName().toString();
-		String copierClassName = originalClassName + classSuffix;
         String className;
         if (packageName.length() > 0) {
             className = binaryName.substring(packageName.length() + 1) + classSuffix;
@@ -84,7 +83,7 @@ public class CopierCodeGen {
 		jw.endType();
 		jw.close();
 
-		return packageName + "." + copierClassName;
+		return packageName + "." + className;
     }
 
 	private void emitAssignmentStatement(JavaWriter jw, CopyField field) throws IOException {
