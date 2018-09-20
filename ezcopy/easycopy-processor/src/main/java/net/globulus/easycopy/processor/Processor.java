@@ -4,9 +4,13 @@ import net.globulus.easycopy.annotation.EasyCopy;
 import net.globulus.easycopy.annotation.Skip;
 import net.globulus.easycopy.processor.codegen.CopierCodeGen;
 import net.globulus.easycopy.processor.codegen.CopierListCodeGen;
+import net.globulus.easycopy.processor.codegen.MergeFileCodeGen;
+import net.globulus.easycopy.processor.util.FrameworkUtil;
 import net.globulus.easycopy.processor.util.ProcessorLog;
 
+import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -63,6 +67,7 @@ public class Processor extends AbstractProcessor {
 		List<String> parcelerNames = new ArrayList<>();
 		CopierCodeGen copierCodeGen = new CopierCodeGen(mElementUtils, mFiler);
 		Element lastElement = null;
+		Boolean shouldMerge = null;
 		for (Element element : roundEnv.getElementsAnnotatedWith(EasyCopy.class)) {
 			if (!isValid(element)) {
 				continue;
@@ -73,6 +78,11 @@ public class Processor extends AbstractProcessor {
 
 			EasyCopy annotation = element.getAnnotation(EasyCopy.class);
 			boolean deep = annotation.deep();
+			if (annotation.bottom()) {
+				shouldMerge = true;
+			} else {
+				shouldMerge = false;
+			}
 
 			List<? extends Element> memberFields = mElementUtils.getAllMembers((TypeElement) element);
 
@@ -107,8 +117,43 @@ public class Processor extends AbstractProcessor {
 				e.printStackTrace();
 			}
 		}
+		if (shouldMerge == null) {
+			return true;
+		}
+		CopierListCodeGen.Input input = new CopierListCodeGen.Input(shouldMerge ? lastElement : null, annotatedClasses, parcelerNames);
+		if (shouldMerge) {
+//			ProcessorLog.note(lastElement, "MERGING");
+			ByteBuffer buffer = ByteBuffer.allocate(50_000);
+			try {
+				for (int i = 0; i < Integer.MAX_VALUE; i++) {
+					Class mergeClass = Class.forName(FrameworkUtil.getEasyCopyPackageName() + "." + MergeFileCodeGen.CLASS_NAME + i, true, getClass().getClassLoader());
 
-		new CopierListCodeGen().generate(mFiler, lastElement, annotatedClasses, parcelerNames);
+//					ProcessorLog.note(lastElement, "FOUND MERGE CLASS");
+					buffer.put((byte[]) mergeClass.getField(MergeFileCodeGen.MERGE_FIELD_NAME).get(null));
+					if (!mergeClass.getField(MergeFileCodeGen.NEXT_FIELD_NAME).getBoolean(null)) {
+						break;
+					}
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (NoSuchFieldException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			try {
+				CopierListCodeGen.Input merge = CopierListCodeGen.Input.fromBytes(buffer.array());
+				input = input.mergedUp(merge);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			new CopierListCodeGen().generate(mFiler, input);
+		} else {
+//			ProcessorLog.note(lastElement, "WRITING MERGE");
+			new MergeFileCodeGen().generate(mFiler, input);
+		}
 
 		return true;
 	}

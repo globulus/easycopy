@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 public @interface EasyCopy {
 	boolean deep() default false;
+	boolean bottom() default false;
 }
