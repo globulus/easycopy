@@ -1,1 +1,1 @@
-include ':app', ':easycopy-annotations', ':easycopy-processor', ':easycopy'
+include ':app', ':easycopy-annotations', ':easycopy-processor', ':easycopy', ':toplib'

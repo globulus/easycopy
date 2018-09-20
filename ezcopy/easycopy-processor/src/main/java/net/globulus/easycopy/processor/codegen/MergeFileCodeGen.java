@@ -18,7 +18,7 @@ import javawriter.JavaWriter;
 
 public class MergeFileCodeGen {
 
-    public static final String CLASS_NAME = "EasyParcelMerge_";
+    public static final String CLASS_NAME = "EasyCopyMerge_";
     public static final String MERGE_FIELD_NAME = "MERGE";
     public static final String NEXT_FIELD_NAME = "NEXT";
 
