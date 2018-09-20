@@ -80,7 +80,7 @@ public class Processor extends AbstractProcessor {
 			boolean deep = annotation.deep();
 			if (annotation.bottom()) {
 				shouldMerge = true;
-			} else {
+			} else if (shouldMerge == null) {
 				shouldMerge = false;
 			}
 
