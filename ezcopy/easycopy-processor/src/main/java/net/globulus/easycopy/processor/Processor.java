@@ -122,13 +122,13 @@ public class Processor extends AbstractProcessor {
 		}
 		CopierListCodeGen.Input input = new CopierListCodeGen.Input(shouldMerge ? lastElement : null, annotatedClasses, parcelerNames);
 		if (shouldMerge) {
-			ProcessorLog.note(lastElement, "MERGING");
+//			ProcessorLog.note(lastElement, "MERGING");
 			ByteBuffer buffer = ByteBuffer.allocate(50_000);
 			try {
 				for (int i = 0; i < Integer.MAX_VALUE; i++) {
 					Class mergeClass = Class.forName(FrameworkUtil.getEasyCopyPackageName() + "." + MergeFileCodeGen.CLASS_NAME + i, true, getClass().getClassLoader());
 
-					ProcessorLog.note(lastElement, "FOUND MERGE CLASS");
+//					ProcessorLog.note(lastElement, "FOUND MERGE CLASS");
 					buffer.put((byte[]) mergeClass.getField(MergeFileCodeGen.MERGE_FIELD_NAME).get(null));
 					if (!mergeClass.getField(MergeFileCodeGen.NEXT_FIELD_NAME).getBoolean(null)) {
 						break;
