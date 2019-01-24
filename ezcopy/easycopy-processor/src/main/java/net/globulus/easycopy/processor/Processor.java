@@ -151,7 +151,7 @@ public class Processor extends AbstractProcessor {
 			}
 			new CopierListCodeGen().generate(mFiler, input);
 		} else {
-			ProcessorLog.note(lastElement, "WRITING MERGE");
+//			ProcessorLog.note(lastElement, "WRITING MERGE");
 			new MergeFileCodeGen().generate(mFiler, input);
 		}
 
